@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Background Preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #111; padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; min-height: 100vh; }
+  @media (max-width: 800px) { body { grid-template-columns: 1fr; } }
+  .preview { border-radius: 24px; overflow: hidden; position: relative; height: 520px; }
+  .label { position: absolute; top: 16px; left: 16px; background: rgba(0,0,0,0.5); color: #fff; padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 800; z-index: 10; backdrop-filter: blur(8px); }
+  .phone { position: absolute; inset: 0; display: flex; flex-direction: column; z-index: 2; }
+  .phone-header { padding: 60px 20px 16px; }
+  .phone-header .sub { font-size: 13px; font-weight: 700; text-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .phone-body { padding: 0 14px; flex: 1; }
+  .card { background: rgba(255,255,255,0.97); border-radius: 18px; padding: 18px; margin-bottom: 12px; box-shadow: 0 2px 14px rgba(0,0,0,0.09); }
+  .card-title { font-size: 11px; font-weight: 800; color: #aaa; text-transform: uppercase; letter-spacing: 1.8px; margin-bottom: 8px; }
+  .card-amount { font-size: 30px; font-weight: 900; color: #1a1a1a; letter-spacing: -0.5px; }
+  .card-sub { font-size: 13px; color: #999; margin-top: 4px; }
+  .acc-card { background: rgba(255,255,255,0.97); border-radius: 18px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 2px 14px rgba(0,0,0,0.09); }
+  .acc-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+  .acc-title { font-size: 13px; font-weight: 700; color: #1a1a1a; display: inline; }
+  .acc-amount { font-size: 26px; font-weight: 800; color: #1a1a1a; letter-spacing: -0.5px; margin-top: 6px; }
+  .acc-sub { font-size: 13px; color: #777; margin-top: 2px; }
+
+  /* 1: Clean gradient */
+  .bg-gradient { background: linear-gradient(160deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #1a1a2e 100%); }
+  .bg-gradient .sub { color: rgba(255,255,255,0.85); }
+
+  /* 2: Dark mode */
+  .bg-dark { background: #0d0d0d; }
+  .bg-dark::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 20%, rgba(192,57,43,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(41,128,185,0.06) 0%, transparent 60%); z-index: 1; }
+  .bg-dark .sub { color: rgba(255,255,255,0.75); }
+  .bg-dark .card, .bg-dark .acc-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); }
+  .bg-dark .card-title { color: rgba(255,255,255,0.4); }
+  .bg-dark .card-amount { color: #fff; }
+  .bg-dark .card-sub { color: rgba(255,255,255,0.45); }
+  .bg-dark .acc-title { color: #fff; }
+  .bg-dark .acc-amount { color: #fff; }
+  .bg-dark .acc-sub { color: rgba(255,255,255,0.4); }
+
+  /* 3: Soft mesh */
+  .bg-mesh { background: #f0f0f5; overflow: hidden; }
+  .bg-mesh .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; z-index: 0; animation: float 8s ease-in-out infinite; }
+  .bg-mesh .blob-1 { width: 300px; height: 300px; background: #C0392B; top: -60px; left: -40px; }
+  .bg-mesh .blob-2 { width: 250px; height: 250px; background: #2980B9; bottom: -40px; right: -30px; animation-delay: -4s; }
+  .bg-mesh .blob-3 { width: 200px; height: 200px; background: #27AE60; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: -2s; }
+  .bg-mesh .sub { color: #555; }
+  @keyframes float { 0%,100% { transform: translate(0,0); } 50% { transform: translate(15px,-15px); } }
+
+  /* 4: Solid minimal */
+  .bg-minimal { background: #f5f5f5; }
+  .bg-minimal .sub { color: #666; }
+</style>
+</head>
+<body>
+
+<!-- 1: Clean Gradient -->
+<div class="preview bg-gradient">
+  <div class="label">1 — Clean Gradient</div>
+  <div class="phone">
+    <div class="phone-header"><div class="sub">Here's a snapshot of your accounts</div></div>
+    <div class="phone-body">
+      <div class="acc-card"><div><span class="acc-dot" style="background:#8B6914"></span><span class="acc-title">Brett's Checking</span></div><div class="acc-amount">$485.00</div><div class="acc-sub">Current Balance $485.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#C0392B"></span><span class="acc-title">Emergency Fund</span></div><div class="acc-amount">$375.00</div><div class="acc-sub">Current Balance $375.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#2980B9"></span><span class="acc-title">Roth IRA</span></div><div class="acc-amount">$100.00</div><div class="acc-sub">Current Balance $100.00</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2: Dark Mode -->
+<div class="preview bg-dark">
+  <div class="label">2 — Dark Mode</div>
+  <div class="phone">
+    <div class="phone-header"><div class="sub">Here's a snapshot of your accounts</div></div>
+    <div class="phone-body">
+      <div class="acc-card"><div><span class="acc-dot" style="background:#8B6914"></span><span class="acc-title">Brett's Checking</span></div><div class="acc-amount">$485.00</div><div class="acc-sub">Current Balance $485.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#C0392B"></span><span class="acc-title">Emergency Fund</span></div><div class="acc-amount">$375.00</div><div class="acc-sub">Current Balance $375.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#2980B9"></span><span class="acc-title">Roth IRA</span></div><div class="acc-amount">$100.00</div><div class="acc-sub">Current Balance $100.00</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3: Soft Mesh -->
+<div class="preview bg-mesh">
+  <div class="label">3 — Soft Mesh</div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="phone">
+    <div class="phone-header"><div class="sub">Here's a snapshot of your accounts</div></div>
+    <div class="phone-body">
+      <div class="acc-card"><div><span class="acc-dot" style="background:#8B6914"></span><span class="acc-title">Brett's Checking</span></div><div class="acc-amount">$485.00</div><div class="acc-sub">Current Balance $485.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#C0392B"></span><span class="acc-title">Emergency Fund</span></div><div class="acc-amount">$375.00</div><div class="acc-sub">Current Balance $375.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#2980B9"></span><span class="acc-title">Roth IRA</span></div><div class="acc-amount">$100.00</div><div class="acc-sub">Current Balance $100.00</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4: Solid Minimal -->
+<div class="preview bg-minimal">
+  <div class="label">4 — Solid Minimal</div>
+  <div class="phone">
+    <div class="phone-header"><div class="sub">Here's a snapshot of your accounts</div></div>
+    <div class="phone-body">
+      <div class="acc-card"><div><span class="acc-dot" style="background:#8B6914"></span><span class="acc-title">Brett's Checking</span></div><div class="acc-amount">$485.00</div><div class="acc-sub">Current Balance $485.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#C0392B"></span><span class="acc-title">Emergency Fund</span></div><div class="acc-amount">$375.00</div><div class="acc-sub">Current Balance $375.00</div></div>
+      <div class="acc-card"><div><span class="acc-dot" style="background:#2980B9"></span><span class="acc-title">Roth IRA</span></div><div class="acc-amount">$100.00</div><div class="acc-sub">Current Balance $100.00</div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

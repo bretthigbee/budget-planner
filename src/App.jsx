@@ -33,31 +33,21 @@ function inWeek(raw)  { const d=new Date(raw); return d>=getWeekStart()&&d<=getW
 function inMonth(raw) { const d=new Date(raw),n=new Date(); return d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear(); }
 function fmt(n)       { return (+n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
-function MountainBg() {
+function DarkBg() {
   return (
-    <div style={{position:"fixed",inset:0,zIndex:0,overflow:"hidden"}}>
-      <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,#b8c4cc 0%,#d0d8dc 35%,#c4c4bc 70%,#8a8880 100%)"}}/>
-      <svg viewBox="0 0 390 340" style={{position:"absolute",bottom:"32%",width:"100%",opacity:0.45}} preserveAspectRatio="none">
-        <polygon points="0,340 50,130 110,200 170,90 230,160 290,55 350,140 390,100 390,340" fill="#8fa0a8"/>
-      </svg>
-      <svg viewBox="0 0 390 300" style={{position:"absolute",bottom:"22%",width:"100%",opacity:0.65}} preserveAspectRatio="none">
-        <polygon points="0,300 20,170 70,210 130,110 190,170 250,75 310,145 370,95 390,120 390,300" fill="#6e8088"/>
-      </svg>
-      <svg viewBox="0 0 390 130" style={{position:"absolute",bottom:"17%",width:"100%",opacity:0.55}} preserveAspectRatio="none">
-        {[8,24,40,56,72,88,104,120,136,152,168,184,200,216,232,248,264,280,296,312,328,344,360,376].map((x,i)=>
-          <polygon key={i} points={`${x},130 ${x+7},${55+Math.sin(i*1.3)*18} ${x+14},130`} fill="#3d4d44"/>
-        )}
-      </svg>
-      <div style={{position:"absolute",bottom:0,left:0,right:0,height:"20%",background:"linear-gradient(180deg,#7a7870 0%,#5a5650 100%)"}}/>
-      <div style={{position:"absolute",bottom:"4%",left:"12%",right:"12%",height:"6%",background:"linear-gradient(180deg,rgba(255,255,255,0.15),rgba(255,255,255,0.04))",borderRadius:60,filter:"blur(3px)"}}/>
+    <div style={{position:"fixed",inset:0,zIndex:0,overflow:"hidden",background:"#0A0A0F"}}>
+      <div style={{position:"absolute",width:"60%",height:"50%",top:"-10%",left:"-10%",background:"radial-gradient(ellipse,rgba(192,57,43,0.08) 0%,transparent 70%)"}}/>
+      <div style={{position:"absolute",width:"50%",height:"50%",bottom:"-5%",right:"-10%",background:"radial-gradient(ellipse,rgba(41,128,185,0.06) 0%,transparent 70%)"}}/>
+      <div style={{position:"absolute",width:"40%",height:"40%",top:"40%",left:"30%",background:"radial-gradient(ellipse,rgba(39,174,96,0.04) 0%,transparent 70%)"}}/>
     </div>
   );
 }
 
 function Card({children, style={}, delay=0}) {
   return (
-    <div style={{background:"rgba(255,255,255,0.97)",borderRadius:18,padding:18,marginBottom:12,
-      boxShadow:"0 2px 14px rgba(0,0,0,0.09)",animation:`slideUp 0.38s ease ${delay}s both`,...style}}>
+    <div style={{background:"rgba(255,255,255,0.05)",borderRadius:18,padding:18,marginBottom:12,
+      border:"1px solid rgba(255,255,255,0.08)",backdropFilter:"blur(20px)",
+      animation:`slideUp 0.38s ease ${delay}s both`,...style}}>
       {children}
     </div>
   );
@@ -66,7 +56,7 @@ function Card({children, style={}, delay=0}) {
 function Bar({spent, budget, color, h=5}) {
   const pct = budget>0 ? Math.min((spent/budget)*100,100) : 0;
   return (
-    <div style={{width:"100%",height:h,background:"#EBEBEB",borderRadius:99,overflow:"hidden",marginTop:9}}>
+    <div style={{width:"100%",height:h,background:"rgba(255,255,255,0.1)",borderRadius:99,overflow:"hidden",marginTop:9}}>
       <div style={{width:`${pct}%`,height:"100%",background:spent>budget&&budget>0?"#C0392B":color,borderRadius:99,transition:"width 0.55s ease"}}/>
     </div>
   );
@@ -80,7 +70,7 @@ function MiniBar({data, color}) {
         <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
           <div style={{width:"100%",borderRadius:"4px 4px 0 0",background:d.active?color:color+"44",
             height:Math.max((d.val/max)*50,d.val>0?3:0),transition:"height 0.4s ease"}}/>
-          <div style={{fontSize:9,color:"#bbb",fontWeight:700}}>{d.label}</div>
+          <div style={{fontSize:9,color:"rgba(255,255,255,0.3)",fontWeight:700}}>{d.label}</div>
         </div>
       ))}
     </div>
@@ -89,30 +79,31 @@ function MiniBar({data, color}) {
 
 function AccCard({title, available, current, dot, delay=0, onClick}) {
   return (
-    <div onClick={onClick} style={{background:"rgba(255,255,255,0.97)",borderRadius:18,padding:"16px 18px",marginBottom:12,
-      boxShadow:"0 2px 14px rgba(0,0,0,0.09)",cursor:"pointer",animation:`slideUp 0.38s ease ${delay}s both`,transition:"transform 0.12s"}}
+    <div onClick={onClick} style={{background:"rgba(255,255,255,0.05)",borderRadius:18,padding:"16px 18px",marginBottom:12,
+      border:"1px solid rgba(255,255,255,0.08)",backdropFilter:"blur(20px)",
+      cursor:"pointer",animation:`slideUp 0.38s ease ${delay}s both`,transition:"transform 0.12s"}}
       onTouchStart={e=>e.currentTarget.style.transform="scale(0.985)"}
       onTouchEnd={e=>e.currentTarget.style.transform="scale(1)"}>
       <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
         <div style={{width:10,height:10,borderRadius:"50%",background:dot}}/>
-        <div style={{fontSize:13,fontWeight:700,color:"#1a1a1a"}}>{title}</div>
+        <div style={{fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.7)"}}>{title}</div>
       </div>
       <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-        <span style={{fontSize:30,fontWeight:800,color:"#1a1a1a",letterSpacing:-0.5}}>${fmt(available)}</span>
-        <span style={{fontSize:13,color:"#888"}}>Available Now</span>
+        <span style={{fontSize:30,fontWeight:800,color:"#fff",letterSpacing:-0.5}}>${fmt(available)}</span>
+        <span style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>Available Now</span>
       </div>
-      <div style={{fontSize:13,color:"#777",marginTop:2}}>Current Balance ${fmt(current)}</div>
+      <div style={{fontSize:13,color:"rgba(255,255,255,0.35)",marginTop:2}}>Current Balance ${fmt(current)}</div>
     </div>
   );
 }
 
 function PeriodToggle({value, onChange}) {
   return (
-    <div style={{display:"flex",background:"#F2F2F2",borderRadius:12,padding:3,gap:2,marginBottom:16}}>
+    <div style={{display:"flex",background:"rgba(255,255,255,0.06)",borderRadius:12,padding:3,gap:2,marginBottom:16}}>
       {["week","month"].map(p=>(
-        <button key={p} onClick={()=>onChange(p)} style={{flex:1,background:value===p?"#fff":"transparent",
-          border:"none",borderRadius:10,padding:"8px 0",fontSize:12,fontWeight:value===p?800:600,
-          color:value===p?"#C0392B":"#aaa",boxShadow:value===p?"0 1px 6px rgba(0,0,0,0.1)":"none",
+        <button key={p} onClick={()=>onChange(p)} style={{flex:1,background:value===p?"rgba(255,255,255,0.1)":"transparent",
+          border:value===p?"1px solid rgba(255,255,255,0.1)":"1px solid transparent",borderRadius:10,padding:"8px 0",fontSize:12,fontWeight:value===p?800:600,
+          color:value===p?"#C0392B":"rgba(255,255,255,0.4)",boxShadow:"none",
           cursor:"pointer",transition:"all 0.2s",fontFamily:"inherit"}}>
           {p==="week"?"This Week":"This Month"}
         </button>
@@ -263,37 +254,39 @@ export default function App() {
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     ::-webkit-scrollbar{display:none}
     input,select{-webkit-appearance:none}
-    input:focus,select:focus{outline:none;border-color:#C0392B!important;box-shadow:0 0 0 3px rgba(192,57,43,0.12)!important}
+    input:focus,select:focus{outline:none;border-color:#C0392B!important;box-shadow:0 0 0 3px rgba(192,57,43,0.2)!important}
+    input::placeholder,select::placeholder{color:rgba(255,255,255,0.25)}
+    select option{background:#141418;color:#fff}
   `;
 
   const S={
-    root:    {position:"fixed",inset:0,fontFamily:"'Nunito','SF Pro Display','Helvetica Neue',sans-serif",overflow:"hidden"},
+    root:    {position:"fixed",inset:0,fontFamily:"'Nunito','SF Pro Display','Helvetica Neue',sans-serif",overflow:"hidden",color:"#fff"},
     screen:  {position:"absolute",inset:0,overflowY:"auto",paddingBottom:88,zIndex:1},
     hdr:     {padding:"56px 20px 14px"},
-    subhead: {fontSize:13,color:"rgba(255,255,255,0.88)",fontWeight:700,textShadow:"0 1px 4px rgba(0,0,0,0.25)"},
-    iconBtn: {width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,0.2)",border:"none",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",backdropFilter:"blur(10px)"},
+    subhead: {fontSize:13,color:"rgba(255,255,255,0.7)",fontWeight:700},
+    iconBtn: {width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.1)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",backdropFilter:"blur(10px)"},
     body:    {padding:"0 14px"},
-    sl:      {fontSize:11,fontWeight:800,color:"#aaa",textTransform:"uppercase",letterSpacing:1.8,marginBottom:14},
+    sl:      {fontSize:11,fontWeight:800,color:"rgba(255,255,255,0.35)",textTransform:"uppercase",letterSpacing:1.8,marginBottom:14},
     row:     {display:"flex",alignItems:"center",gap:10},
     sb:      {display:"flex",alignItems:"center",justifyContent:"space-between"},
-    divider: {height:1,background:"#F2F2F2",margin:"12px 0"},
-    input:   {background:"#F7F7F7",border:"1.5px solid #E8E8E8",borderRadius:12,color:"#1a1a1a",fontSize:15,padding:"13px 14px",width:"100%",fontFamily:"inherit",fontWeight:600},
-    select:  {background:"#F7F7F7",border:"1.5px solid #E8E8E8",borderRadius:12,color:"#1a1a1a",fontSize:15,padding:"13px 14px",width:"100%",fontFamily:"inherit",fontWeight:600,cursor:"pointer"},
-    flabel:  {fontSize:11,fontWeight:800,color:"#888",textTransform:"uppercase",letterSpacing:1,marginBottom:7,display:"block"},
+    divider: {height:1,background:"rgba(255,255,255,0.08)",margin:"12px 0"},
+    input:   {background:"rgba(255,255,255,0.06)",border:"1.5px solid rgba(255,255,255,0.1)",borderRadius:12,color:"#fff",fontSize:15,padding:"13px 14px",width:"100%",fontFamily:"inherit",fontWeight:600},
+    select:  {background:"rgba(255,255,255,0.06)",border:"1.5px solid rgba(255,255,255,0.1)",borderRadius:12,color:"#fff",fontSize:15,padding:"13px 14px",width:"100%",fontFamily:"inherit",fontWeight:600,cursor:"pointer"},
+    flabel:  {fontSize:11,fontWeight:800,color:"rgba(255,255,255,0.4)",textTransform:"uppercase",letterSpacing:1,marginBottom:7,display:"block"},
     redBtn:  {background:"#C0392B",color:"#fff",border:"none",borderRadius:13,padding:14,fontWeight:800,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit"},
     greenBtn:{background:"#27AE60",color:"#fff",border:"none",borderRadius:13,padding:14,fontWeight:800,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit"},
-    ghostBtn:{background:"#F2F2F2",color:"#555",border:"none",borderRadius:13,padding:14,fontWeight:700,fontSize:14,cursor:"pointer",width:"100%",fontFamily:"inherit"},
-    bnav:    {position:"fixed",bottom:0,left:0,right:0,background:"rgba(255,255,255,0.97)",borderTop:"1px solid #EBEBEB",display:"flex",justifyContent:"space-around",paddingBottom:"env(safe-area-inset-bottom,14px)",paddingTop:10,zIndex:50,backdropFilter:"blur(12px)"},
-    nb:      (a)=>({background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:3,color:a?"#C0392B":"#aaa",fontSize:10,fontWeight:a?800:600,cursor:"pointer",padding:"0 8px",fontFamily:"inherit"}),
-    overlay: {position:"fixed",inset:0,background:"rgba(0,0,0,0.42)",zIndex:100,display:"flex",alignItems:"flex-end",animation:"fadeIn 0.18s ease"},
-    sheet:   {background:"#fff",borderRadius:"22px 22px 0 0",width:"100%",animation:"sheetUp 0.28s cubic-bezier(.4,0,.2,1)",maxHeight:"92vh",overflowY:"auto",paddingBottom:"env(safe-area-inset-bottom,20px)"},
-    handle:  {width:38,height:4,background:"#DDD",borderRadius:99,margin:"14px auto 18px"},
-    stitle:  {fontSize:19,fontWeight:800,color:"#1a1a1a",padding:"0 20px 16px"},
+    ghostBtn:{background:"rgba(255,255,255,0.08)",color:"rgba(255,255,255,0.6)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:13,padding:14,fontWeight:700,fontSize:14,cursor:"pointer",width:"100%",fontFamily:"inherit"},
+    bnav:    {position:"fixed",bottom:0,left:0,right:0,background:"rgba(10,10,15,0.92)",borderTop:"1px solid rgba(255,255,255,0.08)",display:"flex",justifyContent:"space-around",paddingBottom:"env(safe-area-inset-bottom,14px)",paddingTop:10,zIndex:50,backdropFilter:"blur(20px)"},
+    nb:      (a)=>({background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:3,color:a?"#C0392B":"rgba(255,255,255,0.35)",fontSize:10,fontWeight:a?800:600,cursor:"pointer",padding:"0 8px",fontFamily:"inherit"}),
+    overlay: {position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:100,display:"flex",alignItems:"flex-end",animation:"fadeIn 0.18s ease"},
+    sheet:   {background:"#141418",borderRadius:"22px 22px 0 0",width:"100%",animation:"sheetUp 0.28s cubic-bezier(.4,0,.2,1)",maxHeight:"92vh",overflowY:"auto",paddingBottom:"env(safe-area-inset-bottom,20px)",border:"1px solid rgba(255,255,255,0.08)",borderBottom:"none"},
+    handle:  {width:38,height:4,background:"rgba(255,255,255,0.2)",borderRadius:99,margin:"14px auto 18px"},
+    stitle:  {fontSize:19,fontWeight:800,color:"#fff",padding:"0 20px 16px"},
     sbody:   {padding:"0 20px"},
     fg:      {marginBottom:16},
-    flash:   {position:"fixed",top:58,left:"50%",transform:"translateX(-50%)",background:"#1a1a1a",color:"#fff",padding:"10px 22px",borderRadius:99,fontWeight:700,fontSize:13,zIndex:999,whiteSpace:"nowrap",boxShadow:"0 4px 20px rgba(0,0,0,0.18)",animation:"fadeIn 0.2s ease"},
+    flash:   {position:"fixed",top:58,left:"50%",transform:"translateX(-50%)",background:"rgba(255,255,255,0.12)",color:"#fff",padding:"10px 22px",borderRadius:99,fontWeight:700,fontSize:13,zIndex:999,whiteSpace:"nowrap",backdropFilter:"blur(20px)",border:"1px solid rgba(255,255,255,0.1)",animation:"fadeIn 0.2s ease"},
     fab:     {position:"fixed",bottom:84,right:18,width:54,height:54,borderRadius:"50%",background:"#C0392B",border:"none",color:"#fff",fontSize:26,cursor:"pointer",boxShadow:"0 4px 20px rgba(192,57,43,0.45)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:49},
-    tip:     {background:"rgba(192,57,43,0.06)",border:"1px solid rgba(192,57,43,0.18)",borderRadius:14,padding:"13px 15px",marginBottom:12},
+    tip:     {background:"rgba(192,57,43,0.08)",border:"1px solid rgba(192,57,43,0.2)",borderRadius:14,padding:"13px 15px",marginBottom:12},
   };
 
   const navItems=[
@@ -310,7 +303,7 @@ export default function App() {
   return (
     <div style={S.root}>
       <style>{css}</style>
-      <MountainBg/>
+      <DarkBg/>
       {flash && <div style={S.flash}>{flash}</div>}
 
       {/* ══ ACCOUNTS ══ */}
@@ -340,8 +333,8 @@ export default function App() {
           <div style={S.body}>
             <Card delay={0}>
               <div style={S.sl}>Monthly Overview</div>
-              <div style={{fontSize:34,fontWeight:900,color:"#1a1a1a",letterSpacing:-1}}>${fmt(effIncome)}</div>
-              <div style={{fontSize:13,color:"#999",marginTop:3}}>
+              <div style={{fontSize:34,fontWeight:900,color:"#fff",letterSpacing:-1}}>${fmt(effIncome)}</div>
+              <div style={{fontSize:13,color:"rgba(255,255,255,0.45)",marginTop:3}}>
                 ${fmt(totalSpent)} spent ·{" "}
                 <span style={{color:remaining>=0?"#27AE60":"#C0392B",fontWeight:700}}>
                   ${fmt(Math.abs(remaining))} {remaining>=0?"remaining":"over"}
@@ -349,7 +342,7 @@ export default function App() {
               </div>
               <Bar spent={totalSpent} budget={effIncome} color="#C0392B"/>
               <div style={{...S.sb,marginTop:7}}>
-                <span style={{fontSize:11,color:"#bbb",fontWeight:700}}>{effIncome>0?((totalSpent/effIncome)*100).toFixed(0):0}% allocated</span>
+                <span style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:700}}>{effIncome>0?((totalSpent/effIncome)*100).toFixed(0):0}% allocated</span>
                 <span style={{fontSize:11,color:"#27AE60",fontWeight:800}}>{effIncome>0?((actuals.savings/effIncome)*100).toFixed(1):0}% savings rate</span>
               </div>
             </Card>
@@ -363,8 +356,8 @@ export default function App() {
                     <div style={S.row}>
                       <span style={{fontSize:20}}>{cat.icon}</span>
                       <div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#1a1a1a"}}>{cat.label}</div>
-                        <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>{Math.round(cat.pct*100)}% · budget ${fmt(bgt)}</div>
+                        <div style={{fontSize:15,fontWeight:800,color:"#fff"}}>{cat.label}</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{Math.round(cat.pct*100)}% · budget ${fmt(bgt)}</div>
                       </div>
                     </div>
                     <div style={{textAlign:"right"}}>
@@ -395,11 +388,11 @@ export default function App() {
               <div style={S.sb}>
                 <div>
                   <div style={S.sl}>{period==="week"?weekLabel:monthLabel}</div>
-                  <div style={{fontSize:32,fontWeight:900,color:"#1a1a1a",letterSpacing:-1}}>${fmt(periodTotal)}</div>
-                  <div style={{fontSize:13,color:"#999",marginTop:3}}>of ${fmt(periodBudget)} {period==="week"?"weekly":"monthly"} budget</div>
+                  <div style={{fontSize:32,fontWeight:900,color:"#fff",letterSpacing:-1}}>${fmt(periodTotal)}</div>
+                  <div style={{fontSize:13,color:"rgba(255,255,255,0.45)",marginTop:3}}>of ${fmt(periodBudget)} {period==="week"?"weekly":"monthly"} budget</div>
                 </div>
                 <div style={{textAlign:"right"}}>
-                  <div style={{fontSize:11,color:"#bbb",fontWeight:700,marginBottom:4}}>Budget used</div>
+                  <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:700,marginBottom:4}}>Budget used</div>
                   <div style={{fontSize:26,fontWeight:900,color:periodTotal>periodBudget?"#C0392B":"#27AE60"}}>
                     {periodBudget>0?Math.min(((periodTotal/periodBudget)*100),100).toFixed(0):0}%
                   </div>
@@ -413,7 +406,7 @@ export default function App() {
             <Card delay={0.06}>
               <div style={S.sl}>{period==="week"?"Daily Spending":"Weekly Spending"}</div>
               <MiniBar data={period==="week"?weekDailyData:monthWeekData} color="#C0392B"/>
-              {periodTx.length===0 && <div style={{textAlign:"center",color:"#ccc",fontSize:12,fontWeight:600,marginTop:8}}>No transactions logged yet</div>}
+              {periodTx.length===0 && <div style={{textAlign:"center",color:"rgba(255,255,255,0.25)",fontSize:12,fontWeight:600,marginTop:8}}>No transactions logged yet</div>}
             </Card>
             <Card delay={0.12}>
               <div style={S.sl}>By Category</div>
@@ -427,13 +420,13 @@ export default function App() {
                       <div style={S.row}>
                         <div style={{width:34,height:34,borderRadius:11,background:cat.dot+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17}}>{cat.icon}</div>
                         <div>
-                          <div style={{fontSize:14,fontWeight:700,color:"#1a1a1a"}}>{cat.label}</div>
-                          <div style={{fontSize:10,color:"#bbb",fontWeight:600}}>budget ${fmt(bgt)}</div>
+                          <div style={{fontSize:14,fontWeight:700,color:"#fff"}}>{cat.label}</div>
+                          <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600}}>budget ${fmt(bgt)}</div>
                         </div>
                       </div>
                       <div style={{textAlign:"right"}}>
                         <div style={{fontSize:16,fontWeight:800,color:spent>bgt?"#C0392B":cat.color}}>${fmt(spent)}</div>
-                        <div style={{fontSize:10,color:"#bbb",fontWeight:600}}>{pct.toFixed(0)}% used</div>
+                        <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{pct.toFixed(0)}% used</div>
                       </div>
                     </div>
                     <Bar spent={spent} budget={bgt} color={cat.dot} h={5}/>
@@ -445,25 +438,25 @@ export default function App() {
             <Card delay={0.18}>
               <div style={S.sl}>Insights</div>
               <div style={{display:"flex",flexDirection:"column",gap:10}}>
-                <div style={{background:"#F7F7F7",borderRadius:12,padding:"12px 14px"}}>
-                  <div style={{fontSize:12,fontWeight:800,color:"#1a1a1a",marginBottom:3}}>{period==="week"?"🗓️ Weekly pace":"📅 Monthly pace"}</div>
-                  <div style={{fontSize:12,color:"#888"}}>
+                <div style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px"}}>
+                  <div style={{fontSize:12,fontWeight:800,color:"#fff",marginBottom:3}}>{period==="week"?"🗓️ Weekly pace":"📅 Monthly pace"}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,0.4)"}}>
                     {periodTotal===0?"No spending logged yet."
                       :period==="week"?"Spending ~$"+fmt(periodTotal/7)+"/day. At this pace, ~$"+fmt(periodTotal/7*30)+"/month."
                       :"Spent $"+fmt(periodTotal)+" of $"+fmt(effIncome)+" ("+( effIncome>0?((periodTotal/effIncome)*100).toFixed(0):0)+"%) this month."}
                   </div>
                 </div>
                 {periodTotal>0 && (
-                  <div style={{background:"#F7F7F7",borderRadius:12,padding:"12px 14px"}}>
-                    <div style={{fontSize:12,fontWeight:800,color:"#1a1a1a",marginBottom:3}}>🏆 Top category</div>
-                    <div style={{fontSize:12,color:"#888"}}>
+                  <div style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px"}}>
+                    <div style={{fontSize:12,fontWeight:800,color:"#fff",marginBottom:3}}>🏆 Top category</div>
+                    <div style={{fontSize:12,color:"rgba(255,255,255,0.4)"}}>
                       <span style={{color:topCat.color,fontWeight:800}}>{topCat.icon} {topCat.label}</span>{" "}is your biggest spend at ${fmt(periodByCat[topCat.id])} this {period}.
                     </div>
                   </div>
                 )}
-                <div style={{background:"#F7F7F7",borderRadius:12,padding:"12px 14px"}}>
-                  <div style={{fontSize:12,fontWeight:800,color:"#1a1a1a",marginBottom:3}}>💰 Savings check</div>
-                  <div style={{fontSize:12,color:"#888"}}>
+                <div style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 14px"}}>
+                  <div style={{fontSize:12,fontWeight:800,color:"#fff",marginBottom:3}}>💰 Savings check</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,0.4)"}}>
                     {actuals.savings===0?"No savings logged yet. Even $50 this week makes a difference!"
                       :"Saved $"+fmt(actuals.savings)+" — "+(effIncome>0?((actuals.savings/effIncome)*100).toFixed(1):0)+"% of income. "+(actuals.savings>=(effIncome*0.2)?"✅ On track!":"Goal is $"+fmt(effIncome*0.2)+".")}
                   </div>
@@ -477,7 +470,7 @@ export default function App() {
               ].map((s,i)=>(
                 <Card key={i} delay={0.22+i*0.04} style={{marginBottom:0,textAlign:"center",padding:"16px 14px"}}>
                   <div style={{fontSize:26,fontWeight:900,color:s.color,letterSpacing:-0.5}}>{s.val}</div>
-                  <div style={{fontSize:10,color:"#bbb",fontWeight:700,marginTop:4,whiteSpace:"pre-line",lineHeight:1.4}}>{s.label}</div>
+                  <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:700,marginTop:4,whiteSpace:"pre-line",lineHeight:1.4}}>{s.label}</div>
                 </Card>
               ))}
             </div>
@@ -541,14 +534,14 @@ export default function App() {
                 {label:"HYSA",          pct:"rest",color:"#27AE60",icon:"🏦",note:"everything left — let it compound",example:"whatever's left after the above two"},
               ].map((item,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"space-between",
-                  padding:"12px 0",borderBottom:i<2?"1px solid #F5F5F5":"none"}}>
+                  padding:"12px 0",borderBottom:i<2?"1px solid rgba(255,255,255,0.06)":"none"}}>
                   <div style={S.row}>
                     <div style={{width:38,height:38,borderRadius:11,background:item.color+"18",
                       display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,flexShrink:0}}>{item.icon}</div>
                     <div>
-                      <div style={{fontSize:13,fontWeight:800,color:"#1a1a1a"}}>{item.label}</div>
-                      <div style={{fontSize:10,color:"#bbb",fontWeight:600}}>{item.note}</div>
-                      <div style={{fontSize:9,color:"#ddd",fontWeight:600,marginTop:1}}>{item.example}</div>
+                      <div style={{fontSize:13,fontWeight:800,color:"#fff"}}>{item.label}</div>
+                      <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{item.note}</div>
+                      <div style={{fontSize:9,color:"rgba(255,255,255,0.2)",fontWeight:600,marginTop:1}}>{item.example}</div>
                     </div>
                   </div>
                   <div style={{background:item.color+"18",color:item.color,borderRadius:99,
@@ -573,21 +566,21 @@ export default function App() {
                         {done?"✅":goal.icon}
                       </div>
                       <div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#1a1a1a"}}>{goal.label}</div>
-                        <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>
+                        <div style={{fontSize:15,fontWeight:800,color:"#fff"}}>{goal.label}</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>
                           {done?"Complete! 🎉":"$"+left.toFixed(0)+" left · ~"+mo+" month"+(mo!==1?"s":"")}
                         </div>
                       </div>
                     </div>
                     <div style={{textAlign:"right"}}>
                       <div style={{fontSize:19,fontWeight:900,color:done?"#27AE60":goal.color}}>{pct.toFixed(0)}%</div>
-                      <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>${fmt(prog)} / $1,500</div>
+                      <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>${fmt(prog)} / $1,500</div>
                     </div>
                   </div>
-                  <div style={{height:7,background:"#EBEBEB",borderRadius:99,overflow:"hidden",marginTop:12}}>
+                  <div style={{height:7,background:"rgba(255,255,255,0.1)",borderRadius:99,overflow:"hidden",marginTop:12}}>
                     <div style={{width:pct+"%",height:"100%",background:done?"#27AE60":goal.color,borderRadius:99,transition:"width 0.6s ease"}}/>
                   </div>
-                  <div style={{fontSize:11,color:"#888",marginTop:8,lineHeight:1.6}}>{goal.desc}</div>
+                  <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginTop:8,lineHeight:1.6}}>{goal.desc}</div>
                 </Card>
               );
             })()}
@@ -612,32 +605,32 @@ export default function App() {
                         {stepsComplete===4?"✅":goal.icon}
                       </div>
                       <div>
-                        <div style={{fontSize:15,fontWeight:800,color:"#1a1a1a"}}>{goal.label}</div>
-                        <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>{stepsComplete}/4 steps done · ${fmt(prog)} saved</div>
+                        <div style={{fontSize:15,fontWeight:800,color:"#fff"}}>{goal.label}</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{stepsComplete}/4 steps done · ${fmt(prog)} saved</div>
                       </div>
                     </div>
                     <div style={{textAlign:"right"}}>
                       <div style={{fontSize:19,fontWeight:900,color:goal.color}}>{pct.toFixed(0)}%</div>
-                      <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>of $1,200 yr 1</div>
+                      <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>of $1,200 yr 1</div>
                     </div>
                   </div>
-                  <div style={{height:7,background:"#EBEBEB",borderRadius:99,overflow:"hidden",marginBottom:14}}>
+                  <div style={{height:7,background:"rgba(255,255,255,0.1)",borderRadius:99,overflow:"hidden",marginBottom:14}}>
                     <div style={{width:pct+"%",height:"100%",background:goal.color,borderRadius:99,transition:"width 0.6s ease"}}/>
                   </div>
                   {steps.map((step,i)=>(
                     <div key={step.id} onClick={()=>setRothSteps(p=>({...p,[step.id]:!p[step.id]}))}
                       style={{display:"flex",alignItems:"center",gap:12,padding:"9px 0",
-                        borderBottom:i<3?"1px solid #F5F5F5":"none",cursor:"pointer"}}>
+                        borderBottom:i<3?"1px solid rgba(255,255,255,0.06)":"none",cursor:"pointer"}}>
                       <div style={{width:24,height:24,borderRadius:"50%",flexShrink:0,
                         background:rothSteps[step.id]?"#2980B9":"transparent",
-                        border:"2px solid "+(rothSteps[step.id]?"#2980B9":"#DDD"),
+                        border:"2px solid "+(rothSteps[step.id]?"#2980B9":"rgba(255,255,255,0.15)"),
                         display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.2s"}}>
                         {rothSteps[step.id] && <span style={{color:"#fff",fontSize:13,fontWeight:900}}>✓</span>}
                       </div>
                       <div>
                         <div style={{fontSize:13,fontWeight:700,color:rothSteps[step.id]?"#bbb":"#1a1a1a",
                           textDecoration:rothSteps[step.id]?"line-through":"none"}}>{step.label}</div>
-                        <div style={{fontSize:10,color:"#ccc",fontWeight:600}}>{step.sub}</div>
+                        <div style={{fontSize:10,color:"rgba(255,255,255,0.25)",fontWeight:600}}>{step.sub}</div>
                       </div>
                     </div>
                   ))}
@@ -653,7 +646,7 @@ export default function App() {
                     {hysaDone?"✅":"🏦"}
                   </div>
                   <div>
-                    <div style={{fontSize:15,fontWeight:800,color:"#1a1a1a"}}>Move $15k to a HYSA</div>
+                    <div style={{fontSize:15,fontWeight:800,color:"#fff"}}>Move $15k to a HYSA</div>
                     <div style={{fontSize:11,color:hysaDone?"#27AE60":"#bbb",fontWeight:600}}>
                       {hysaDone?"Done — earning $675/yr 🎉":"Earning $510/yr less than you could be"}
                     </div>
@@ -663,22 +656,22 @@ export default function App() {
               </div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,margin:"12px 0"}}>
                 {[
-                  {label:"Money Market (1.1%)",val:"$165/yr",color:"#bbb"},
+                  {label:"Money Market (1.1%)",val:"$165/yr",color:"rgba(255,255,255,0.3)"},
                   {label:"HYSA (4.5%)",val:"$675/yr",color:"#27AE60"},
                 ].map((s,i)=>(
-                  <div key={i} style={{background:"#F7F7F7",borderRadius:12,padding:"10px",textAlign:"center"}}>
+                  <div key={i} style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"10px",textAlign:"center"}}>
                     <div style={{fontSize:16,fontWeight:900,color:s.color}}>{s.val}</div>
-                    <div style={{fontSize:9,color:"#bbb",fontWeight:700,marginTop:2}}>{s.label}</div>
+                    <div style={{fontSize:9,color:"rgba(255,255,255,0.3)",fontWeight:700,marginTop:2}}>{s.label}</div>
                   </div>
                 ))}
               </div>
-              <div style={{fontSize:11,color:"#888",marginBottom:12,lineHeight:1.6}}>
+              <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginBottom:12,lineHeight:1.6}}>
                 Try <strong>SoFi</strong>, <strong>Marcus</strong>, or <strong>Ally</strong> — free, FDIC insured, transfer anytime.
               </div>
               <button onClick={()=>setHysaDone(p=>!p)} style={{
-                background:hysaDone?"#F2F2F2":"rgba(243,156,18,0.1)",
-                color:hysaDone?"#888":"#E67E22",
-                border:"1.5px solid "+(hysaDone?"#E8E8E8":"#F39C1244"),
+                background:hysaDone?"rgba(255,255,255,0.06)":"rgba(243,156,18,0.1)",
+                color:hysaDone?"rgba(255,255,255,0.4)":"#E67E22",
+                border:"1.5px solid "+(hysaDone?"rgba(255,255,255,0.1)":"#F39C1244"),
                 borderRadius:10,padding:"9px 14px",fontWeight:700,fontSize:12,
                 cursor:"pointer",width:"100%",fontFamily:"inherit"}}>
                 {hysaDone?"↩ Mark as incomplete":"✅ Mark HYSA as opened & funded"}
@@ -690,16 +683,16 @@ export default function App() {
               <div style={S.sl}>Income Growth Tracker</div>
               <div style={S.sb}>
                 <div>
-                  <div style={{fontSize:13,fontWeight:700,color:"#1a1a1a"}}>This Month</div>
+                  <div style={{fontSize:13,fontWeight:700,color:"#fff"}}>This Month</div>
                   <div style={{fontSize:26,fontWeight:900,color:"#27AE60",letterSpacing:-0.5}}>${fmt(monthIncome||DEFAULT_INCOME)}</div>
                 </div>
                 <div style={{textAlign:"right"}}>
-                  <div style={{fontSize:13,fontWeight:700,color:"#1a1a1a"}}>Paychecks</div>
+                  <div style={{fontSize:13,fontWeight:700,color:"#fff"}}>Paychecks</div>
                   <div style={{fontSize:26,fontWeight:900,color:"#2980B9",letterSpacing:-0.5}}>{incList.length}</div>
                 </div>
               </div>
-              <div style={{background:"#F7F7F7",borderRadius:12,padding:"10px 14px",marginTop:12}}>
-                <div style={{fontSize:11,color:"#888",fontWeight:600,lineHeight:1.6}}>
+              <div style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"10px 14px",marginTop:12}}>
+                <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",fontWeight:600,lineHeight:1.6}}>
                   💼 Every $100/mo raise or side hustle deposit cuts your goals timeline. Log every paycheck to track growth.
                 </div>
               </div>
@@ -718,17 +711,17 @@ export default function App() {
               <Card delay={0}>
                 <div style={S.sl}>Income</div>
                 {incList.map((inc,i)=>(
-                  <div key={inc.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 0",borderBottom:i<incList.length-1?"1px solid #F5F5F5":"none"}}>
+                  <div key={inc.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 0",borderBottom:i<incList.length-1?"1px solid rgba(255,255,255,0.06)":"none"}}>
                     <div style={S.row}>
                       <div style={{width:40,height:40,borderRadius:13,background:"#27AE6018",display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,flexShrink:0}}>💵</div>
                       <div>
-                        <div style={{fontSize:14,fontWeight:700,color:"#1a1a1a"}}>{inc.label}</div>
-                        <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>{inc.date}</div>
+                        <div style={{fontSize:14,fontWeight:700,color:"#fff"}}>{inc.label}</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{inc.date}</div>
                       </div>
                     </div>
                     <div style={S.row}>
                       <div style={{fontSize:15,fontWeight:800,color:"#27AE60"}}>+${fmt(inc.amount)}</div>
-                      <button onClick={()=>delInc(inc.id)} style={{background:"none",border:"none",color:"#ddd",cursor:"pointer",fontSize:20,padding:"0 0 0 8px",lineHeight:1}}>×</button>
+                      <button onClick={()=>delInc(inc.id)} style={{background:"none",border:"none",color:"rgba(255,255,255,0.2)",cursor:"pointer",fontSize:20,padding:"0 0 0 8px",lineHeight:1}}>×</button>
                     </div>
                   </div>
                 ))}
@@ -737,25 +730,25 @@ export default function App() {
             <Card delay={incList.length>0?0.06:0}>
               <div style={S.sl}>Expenses</div>
               {txList.length===0?(
-                <div style={{textAlign:"center",padding:"30px 0",color:"#ccc"}}>
+                <div style={{textAlign:"center",padding:"30px 0",color:"rgba(255,255,255,0.25)"}}>
                   <div style={{fontSize:34,marginBottom:10}}>💳</div>
-                  <div style={{fontSize:15,fontWeight:700,color:"#bbb"}}>No expenses yet</div>
+                  <div style={{fontSize:15,fontWeight:700,color:"rgba(255,255,255,0.3)"}}>No expenses yet</div>
                   <div style={{fontSize:12,marginTop:4}}>Tap + to log an expense</div>
                 </div>
               ):txList.map((tx,i)=>{
                 const cat=CATS.find(c=>c.id===tx.category);
                 return (
-                  <div key={tx.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 0",borderBottom:i<txList.length-1?"1px solid #F5F5F5":"none"}}>
+                  <div key={tx.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 0",borderBottom:i<txList.length-1?"1px solid rgba(255,255,255,0.06)":"none"}}>
                     <div style={S.row}>
                       <div style={{width:40,height:40,borderRadius:13,background:(cat?.dot||"#888")+"18",display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,flexShrink:0}}>{cat?.icon}</div>
                       <div>
-                        <div style={{fontSize:14,fontWeight:700,color:"#1a1a1a"}}>{tx.label}</div>
-                        <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>{tx.date} · <span style={{color:cat?.dot}}>{cat?.label}</span></div>
+                        <div style={{fontSize:14,fontWeight:700,color:"#fff"}}>{tx.label}</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{tx.date} · <span style={{color:cat?.dot}}>{cat?.label}</span></div>
                       </div>
                     </div>
                     <div style={S.row}>
                       <div style={{fontSize:15,fontWeight:800,color:"#C0392B"}}>-${fmt(tx.amount)}</div>
-                      <button onClick={()=>delTx(tx.id)} style={{background:"none",border:"none",color:"#ddd",cursor:"pointer",fontSize:20,padding:"0 0 0 8px",lineHeight:1}}>×</button>
+                      <button onClick={()=>delTx(tx.id)} style={{background:"none",border:"none",color:"rgba(255,255,255,0.2)",cursor:"pointer",fontSize:20,padding:"0 0 0 8px",lineHeight:1}}>×</button>
                     </div>
                   </div>
                 );
@@ -784,7 +777,7 @@ export default function App() {
           <div style={S.sheet} onClick={e=>e.stopPropagation()}>
             <div style={S.handle}/>
             <div style={{padding:"0 20px 20px"}}>
-              <div style={{fontSize:16,fontWeight:800,color:"#1a1a1a",marginBottom:16}}>What would you like to add?</div>
+              <div style={{fontSize:16,fontWeight:800,color:"#fff",marginBottom:16}}>What would you like to add?</div>
               <button style={{...S.greenBtn,marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:10}}
                 onClick={()=>setSheet("addIncome")}>
                 <span style={{fontSize:20}}>💵</span> Add Income
@@ -838,9 +831,9 @@ export default function App() {
               <div style={{padding:"0 20px 24px"}}>
                 <div style={{textAlign:"center",marginBottom:22}}>
                   <div style={{fontSize:40,marginBottom:8}}>💵</div>
-                  <div style={{fontSize:22,fontWeight:900,color:"#1a1a1a",letterSpacing:-0.5}}>Paycheck Logged!</div>
+                  <div style={{fontSize:22,fontWeight:900,color:"#fff",letterSpacing:-0.5}}>Paycheck Logged!</div>
                   <div style={{fontSize:32,fontWeight:900,color:"#27AE60",letterSpacing:-1,marginTop:4}}>${fmt(amt)}</div>
-                  <div style={{fontSize:12,color:"#bbb",fontWeight:600,marginTop:6}}>Here's exactly where it goes 👇</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,0.3)",fontWeight:600,marginTop:6}}>Here's exactly where it goes 👇</div>
                 </div>
 
                 {allocations.map((item,i)=>(
@@ -851,8 +844,8 @@ export default function App() {
                         <div style={{width:40,height:40,borderRadius:12,background:item.color+"18",
                           display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{item.icon}</div>
                         <div>
-                          <div style={{fontSize:14,fontWeight:800,color:"#1a1a1a"}}>{item.label}</div>
-                          <div style={{fontSize:11,color:"#aaa",fontWeight:600}}>{item.note}</div>
+                          <div style={{fontSize:14,fontWeight:800,color:"#fff"}}>{item.label}</div>
+                          <div style={{fontSize:11,color:"rgba(255,255,255,0.35)",fontWeight:600}}>{item.note}</div>
                         </div>
                       </div>
                       <div style={{background:item.color,color:"#fff",borderRadius:99,
@@ -862,22 +855,22 @@ export default function App() {
                       <div style={{width:((item.amt/amt)*100).toFixed(0)+"%",height:"100%",background:item.color,borderRadius:99}}/>
                     </div>
                     <div style={{display:"flex",justifyContent:"space-between",marginTop:5}}>
-                      <span style={{fontSize:10,color:"#ccc",fontWeight:700}}>{((item.amt/amt)*100).toFixed(0)}% of paycheck</span>
+                      <span style={{fontSize:10,color:"rgba(255,255,255,0.25)",fontWeight:700}}>{((item.amt/amt)*100).toFixed(0)}% of paycheck</span>
                       <span style={{fontSize:10,color:item.color,fontWeight:800}}>{"→ "+item.action}</span>
                     </div>
                   </div>
                 ))}
 
-                <div style={{background:"#F7F7F7",borderRadius:12,padding:"12px 16px",marginBottom:16,...S.sb}}>
-                  <span style={{fontSize:13,color:"#888",fontWeight:700}}>Total allocated</span>
-                  <span style={{fontSize:15,fontWeight:900,color:"#1a1a1a"}}>${fmt(totalAllocated)} / ${fmt(amt)}</span>
+                <div style={{background:"rgba(255,255,255,0.05)",borderRadius:12,padding:"12px 16px",marginBottom:16,...S.sb}}>
+                  <span style={{fontSize:13,color:"rgba(255,255,255,0.4)",fontWeight:700}}>Total allocated</span>
+                  <span style={{fontSize:15,fontWeight:900,color:"#fff"}}>${fmt(totalAllocated)} / ${fmt(amt)}</span>
                 </div>
 
                 {emergencyLeft===0 && (
                   <div style={{background:"rgba(39,174,96,0.08)",border:"1px solid rgba(39,174,96,0.25)",
                     borderRadius:12,padding:"12px 16px",marginBottom:14}}>
                     <div style={{fontSize:13,fontWeight:800,color:"#27AE60"}}>🎉 Emergency Fund Complete!</div>
-                    <div style={{fontSize:11,color:"#888",marginTop:3}}>The $375 that was going here now goes straight to your HYSA.</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginTop:3}}>The $375 that was going here now goes straight to your HYSA.</div>
                   </div>
                 )}
 
@@ -885,7 +878,7 @@ export default function App() {
                   <div style={{background:"rgba(41,128,185,0.08)",border:"1px solid rgba(41,128,185,0.25)",
                     borderRadius:12,padding:"12px 16px",marginBottom:16}}>
                     <div style={{fontSize:13,fontWeight:800,color:"#2980B9"}}>📈 Roth IRA not opened yet?</div>
-                    <div style={{fontSize:11,color:"#888",marginTop:3}}>Go to Fidelity.com → Open Roth IRA → Deposit $100 → Buy VOO. Takes 10 min.</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginTop:3}}>Go to Fidelity.com → Open Roth IRA → Deposit $100 → Buy VOO. Takes 10 min.</div>
                   </div>
                 )}
 
@@ -945,15 +938,15 @@ export default function App() {
               <div style={S.handle}/>
               <div style={S.stitle}>{goal.icon} {goal.label}</div>
               <div style={S.sbody}>
-                <div style={{background:"#F7F7F7",borderRadius:14,padding:16,marginBottom:20}}>
+                <div style={{background:"rgba(255,255,255,0.05)",borderRadius:14,padding:16,marginBottom:20}}>
                   <div style={{...S.sb,marginBottom:10}}>
-                    <span style={{fontSize:13,color:"#888",fontWeight:700}}>Progress</span>
+                    <span style={{fontSize:13,color:"rgba(255,255,255,0.4)",fontWeight:700}}>Progress</span>
                     <span style={{fontSize:14,fontWeight:800,color:goal.color}}>${fmt(prog)} / ${goal.target.toLocaleString()}</span>
                   </div>
-                  <div style={{height:9,background:"#E4E4E4",borderRadius:99,overflow:"hidden"}}>
+                  <div style={{height:9,background:"rgba(255,255,255,0.1)",borderRadius:99,overflow:"hidden"}}>
                     <div style={{width:pct+"%",height:"100%",background:goal.color,borderRadius:99,transition:"width 0.55s ease"}}/>
                   </div>
-                  <div style={{fontSize:12,color:"#bbb",marginTop:8,fontWeight:600}}>{goal.desc}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,0.3)",marginTop:8,fontWeight:600}}>{goal.desc}</div>
                 </div>
                 <div style={S.fg}>
                   <label style={S.flabel}>Add to this goal</label>
@@ -976,23 +969,23 @@ export default function App() {
             <div style={S.handle}/>
             <div style={S.stitle}>Brett's Checking</div>
             <div style={S.sbody}>
-              <div style={{background:"#F7F7F7",borderRadius:16,padding:22,textAlign:"center",marginBottom:20}}>
-                <div style={{fontSize:13,color:"#aaa",fontWeight:700,marginBottom:6}}>Available Balance</div>
-                <div style={{fontSize:42,fontWeight:900,color:"#1a1a1a",letterSpacing:-1}}>${fmt(balance)}</div>
+              <div style={{background:"rgba(255,255,255,0.05)",borderRadius:16,padding:22,textAlign:"center",marginBottom:20}}>
+                <div style={{fontSize:13,color:"rgba(255,255,255,0.35)",fontWeight:700,marginBottom:6}}>Available Balance</div>
+                <div style={{fontSize:42,fontWeight:900,color:"#fff",letterSpacing:-1}}>${fmt(balance)}</div>
               </div>
-              <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"#999",fontWeight:600}}>Income This Month</span><span style={{fontSize:15,fontWeight:800,color:"#27AE60"}}>${fmt(monthIncome)}</span></div>
-              <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"#999",fontWeight:600}}>Spent This Month</span><span style={{fontSize:15,fontWeight:800,color:"#C0392B"}}>${fmt(totalSpent)}</span></div>
-              <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"#999",fontWeight:600}}>Spent This Week</span><span style={{fontSize:15,fontWeight:800,color:"#E67E22"}}>${fmt(weekTx.reduce((s,t)=>s+t.amount,0))}</span></div>
+              <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"rgba(255,255,255,0.45)",fontWeight:600}}>Income This Month</span><span style={{fontSize:15,fontWeight:800,color:"#27AE60"}}>${fmt(monthIncome)}</span></div>
+              <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"rgba(255,255,255,0.45)",fontWeight:600}}>Spent This Month</span><span style={{fontSize:15,fontWeight:800,color:"#C0392B"}}>${fmt(totalSpent)}</span></div>
+              <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"rgba(255,255,255,0.45)",fontWeight:600}}>Spent This Week</span><span style={{fontSize:15,fontWeight:800,color:"#E67E22"}}>${fmt(weekTx.reduce((s,t)=>s+t.amount,0))}</span></div>
               <div style={S.divider}/>
-              <div style={S.sb}><span style={{fontSize:13,color:"#999",fontWeight:600}}>Savings Rate</span><span style={{fontSize:15,fontWeight:900,color:"#27AE60"}}>{effIncome>0?((actuals.savings/effIncome)*100).toFixed(1):0}%</span></div>
+              <div style={S.sb}><span style={{fontSize:13,color:"rgba(255,255,255,0.45)",fontWeight:600}}>Savings Rate</span><span style={{fontSize:15,fontWeight:900,color:"#27AE60"}}>{effIncome>0?((actuals.savings/effIncome)*100).toFixed(1):0}%</span></div>
               {incList.length>0 && (
                 <div style={{marginTop:20}}>
                   <div style={S.sl}>Recent Income</div>
                   {incList.slice(0,3).map((inc,i)=>(
-                    <div key={inc.id} style={{...S.sb,padding:"10px 0",borderBottom:i<Math.min(incList.length,3)-1?"1px solid #F5F5F5":"none"}}>
+                    <div key={inc.id} style={{...S.sb,padding:"10px 0",borderBottom:i<Math.min(incList.length,3)-1?"1px solid rgba(255,255,255,0.06)":"none"}}>
                       <div>
-                        <div style={{fontSize:13,fontWeight:700,color:"#1a1a1a"}}>{inc.label}</div>
-                        <div style={{fontSize:11,color:"#bbb",fontWeight:600}}>{inc.date}</div>
+                        <div style={{fontSize:13,fontWeight:700,color:"#fff"}}>{inc.label}</div>
+                        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",fontWeight:600}}>{inc.date}</div>
                       </div>
                       <div style={{fontSize:14,fontWeight:800,color:"#27AE60"}}>+${fmt(inc.amount)}</div>
                     </div>
