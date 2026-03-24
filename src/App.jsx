@@ -268,7 +268,8 @@ export default function App() {
     @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(12px,-18px) scale(1.05)}66%{transform:translate(-8px,12px) scale(0.95)}}
     @keyframes pulseGlow{0%,100%{opacity:0.6}50%{opacity:1}}
     @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+    html,body,#root{background:#06060B;height:100%;overflow:hidden}
     ::-webkit-scrollbar{display:none}
     input,select{-webkit-appearance:none}
     input:focus,select:focus{outline:none;border-color:rgba(192,57,43,0.5)!important;box-shadow:0 0 0 3px rgba(192,57,43,0.15), 0 0 20px rgba(192,57,43,0.1)!important}
@@ -281,7 +282,7 @@ export default function App() {
 
   const S={
     root:    {position:"fixed",inset:0,fontFamily:"'Inter','SF Pro Display','Helvetica Neue',sans-serif",overflow:"hidden",color:"#fff",WebkitFontSmoothing:"antialiased"},
-    screen:  {position:"absolute",inset:0,overflowY:"auto",paddingBottom:90,zIndex:1},
+    screen:  {position:"absolute",inset:0,overflowY:"auto",paddingBottom:"calc(env(safe-area-inset-bottom, 14px) + 80px)",zIndex:1},
     hdr:     {padding:"58px 20px 16px"},
     subhead: {fontSize:13,color:"rgba(255,255,255,0.5)",fontWeight:600,letterSpacing:0.3},
     iconBtn: {width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",backdropFilter:"blur(20px)",transition:"background 0.2s"},
@@ -305,7 +306,7 @@ export default function App() {
     sbody:   {padding:"0 20px"},
     fg:      {marginBottom:18},
     flash:   {position:"fixed",top:58,left:"50%",transform:"translateX(-50%)",background:"rgba(255,255,255,0.08)",color:"#fff",padding:"10px 24px",borderRadius:99,fontWeight:600,fontSize:13,zIndex:999,whiteSpace:"nowrap",backdropFilter:"blur(30px)",border:"1px solid rgba(255,255,255,0.08)",animation:"fadeIn 0.2s ease",boxShadow:"0 8px 32px rgba(0,0,0,0.3)"},
-    fab:     {position:"fixed",bottom:86,right:18,width:56,height:56,borderRadius:"50%",background:"linear-gradient(135deg,#E84D3D 0%,#C0392B 100%)",border:"none",color:"#fff",fontSize:26,cursor:"pointer",boxShadow:"0 4px 24px rgba(192,57,43,0.4), 0 0 40px rgba(192,57,43,0.15)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:49,transition:"transform 0.15s cubic-bezier(.16,1,.3,1), box-shadow 0.15s"},
+    fab:     {position:"fixed",bottom:"calc(env(safe-area-inset-bottom, 14px) + 74px)",right:18,width:56,height:56,borderRadius:"50%",background:"linear-gradient(135deg,#E84D3D 0%,#C0392B 100%)",border:"none",color:"#fff",fontSize:26,cursor:"pointer",boxShadow:"0 4px 24px rgba(192,57,43,0.4), 0 0 40px rgba(192,57,43,0.15)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:49,transition:"transform 0.15s cubic-bezier(.16,1,.3,1), box-shadow 0.15s"},
     tip:     {background:"rgba(192,57,43,0.06)",border:"1px solid rgba(192,57,43,0.12)",borderRadius:16,padding:"14px 16px",marginBottom:12},
   };
 
