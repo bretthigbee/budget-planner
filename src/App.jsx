@@ -269,7 +269,9 @@ export default function App() {
     @keyframes pulseGlow{0%,100%{opacity:0.6}50%{opacity:1}}
     @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-    html,body,#root{background:#06060B;height:100%;overflow:hidden}
+    html{background:#06060B;height:100%;overflow:hidden}
+    body{background:#06060B;height:100%;overflow:hidden;margin:0;padding:0;min-height:100vh;min-height:-webkit-fill-available}
+    #root{background:#06060B;height:100%;min-height:100vh;min-height:-webkit-fill-available}
     ::-webkit-scrollbar{display:none}
     input,select{-webkit-appearance:none}
     input:focus,select:focus{outline:none;border-color:rgba(192,57,43,0.5)!important;box-shadow:0 0 0 3px rgba(192,57,43,0.15), 0 0 20px rgba(192,57,43,0.1)!important}
@@ -297,7 +299,7 @@ export default function App() {
     redBtn:  {background:"linear-gradient(135deg,#E84D3D 0%,#C0392B 100%)",color:"#fff",border:"none",borderRadius:14,padding:15,fontWeight:700,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit",boxShadow:"0 4px 20px rgba(192,57,43,0.3)",transition:"transform 0.15s, box-shadow 0.15s"},
     greenBtn:{background:"linear-gradient(135deg,#2ECC71 0%,#27AE60 100%)",color:"#fff",border:"none",borderRadius:14,padding:15,fontWeight:700,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit",boxShadow:"0 4px 20px rgba(39,174,96,0.3)",transition:"transform 0.15s, box-shadow 0.15s"},
     ghostBtn:{background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.5)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:15,fontWeight:600,fontSize:14,cursor:"pointer",width:"100%",fontFamily:"inherit",transition:"all 0.2s"},
-    bnav:    {position:"fixed",bottom:0,left:0,right:0,background:"#06060B",borderTop:"1px solid rgba(255,255,255,0.06)",display:"flex",justifyContent:"space-around",paddingBottom:"env(safe-area-inset-bottom,0px)",paddingTop:10,zIndex:50},
+    bnav:    {position:"fixed",bottom:0,left:0,right:0,background:"#06060B",borderTop:"1px solid rgba(255,255,255,0.06)",display:"flex",justifyContent:"space-around",paddingTop:10,paddingBottom:34,zIndex:50},
     nb:      (a)=>({background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:4,color:a?"#E84D3D":"rgba(255,255,255,0.28)",fontSize:10,fontWeight:a?700:500,cursor:"pointer",padding:"0 8px",fontFamily:"inherit",transition:"color 0.2s",position:"relative"}),
     overlay: {position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",zIndex:100,display:"flex",alignItems:"flex-end",animation:"fadeIn 0.2s ease",backdropFilter:"blur(4px)"},
     sheet:   {background:"#0e0e14",borderRadius:"24px 24px 0 0",width:"100%",animation:"sheetUp 0.32s cubic-bezier(.16,1,.3,1)",maxHeight:"92vh",overflowY:"auto",paddingBottom:"env(safe-area-inset-bottom,20px)",border:"1px solid rgba(255,255,255,0.06)",borderBottom:"none",boxShadow:"0 -10px 40px rgba(0,0,0,0.3)"},
