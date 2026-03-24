@@ -35,19 +35,26 @@ function fmt(n)       { return (+n).toLocaleString("en-US",{minimumFractionDigit
 
 function DarkBg() {
   return (
-    <div style={{position:"fixed",inset:0,zIndex:0,overflow:"hidden",background:"#0A0A0F"}}>
-      <div style={{position:"absolute",width:"60%",height:"50%",top:"-10%",left:"-10%",background:"radial-gradient(ellipse,rgba(192,57,43,0.08) 0%,transparent 70%)"}}/>
-      <div style={{position:"absolute",width:"50%",height:"50%",bottom:"-5%",right:"-10%",background:"radial-gradient(ellipse,rgba(41,128,185,0.06) 0%,transparent 70%)"}}/>
-      <div style={{position:"absolute",width:"40%",height:"40%",top:"40%",left:"30%",background:"radial-gradient(ellipse,rgba(39,174,96,0.04) 0%,transparent 70%)"}}/>
+    <div style={{position:"fixed",inset:0,zIndex:0,overflow:"hidden",background:"#06060B"}}>
+      {/* Ambient color orbs */}
+      <div style={{position:"absolute",width:"70%",height:"60%",top:"-20%",left:"-15%",background:"radial-gradient(ellipse,rgba(192,57,43,0.07) 0%,transparent 65%)",animation:"orbFloat 20s ease-in-out infinite"}}/>
+      <div style={{position:"absolute",width:"60%",height:"55%",bottom:"-15%",right:"-15%",background:"radial-gradient(ellipse,rgba(41,128,185,0.05) 0%,transparent 65%)",animation:"orbFloat 25s ease-in-out infinite reverse"}}/>
+      <div style={{position:"absolute",width:"45%",height:"45%",top:"35%",left:"25%",background:"radial-gradient(ellipse,rgba(39,174,96,0.035) 0%,transparent 65%)",animation:"orbFloat 18s ease-in-out 3s infinite"}}/>
+      {/* Noise texture overlay */}
+      <svg style={{position:"absolute",inset:0,width:"100%",height:"100%",opacity:0.03}}>
+        <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter>
+        <rect width="100%" height="100%" filter="url(#grain)"/>
+      </svg>
     </div>
   );
 }
 
-function Card({children, style={}, delay=0}) {
+function Card({children, style={}, delay=0, glow=null}) {
   return (
-    <div style={{background:"rgba(255,255,255,0.05)",borderRadius:18,padding:18,marginBottom:12,
-      border:"1px solid rgba(255,255,255,0.08)",backdropFilter:"blur(20px)",
-      animation:`slideUp 0.38s ease ${delay}s both`,...style}}>
+    <div style={{background:"rgba(255,255,255,0.04)",borderRadius:20,padding:18,marginBottom:12,
+      border:"1px solid rgba(255,255,255,0.06)",backdropFilter:"blur(40px)",
+      boxShadow:glow?`0 0 30px ${glow}15, inset 0 1px 0 rgba(255,255,255,0.05)`:"inset 0 1px 0 rgba(255,255,255,0.05)",
+      animation:`slideUp 0.45s cubic-bezier(.16,1,.3,1) ${delay}s both`,...style}}>
       {children}
     </div>
   );
@@ -55,9 +62,13 @@ function Card({children, style={}, delay=0}) {
 
 function Bar({spent, budget, color, h=5}) {
   const pct = budget>0 ? Math.min((spent/budget)*100,100) : 0;
+  const over = spent>budget&&budget>0;
+  const barColor = over?"#C0392B":color;
   return (
-    <div style={{width:"100%",height:h,background:"rgba(255,255,255,0.1)",borderRadius:99,overflow:"hidden",marginTop:9}}>
-      <div style={{width:`${pct}%`,height:"100%",background:spent>budget&&budget>0?"#C0392B":color,borderRadius:99,transition:"width 0.55s ease"}}/>
+    <div style={{width:"100%",height:h,background:"rgba(255,255,255,0.06)",borderRadius:99,overflow:"hidden",marginTop:9}}>
+      <div style={{width:`${pct}%`,height:"100%",background:`linear-gradient(90deg,${barColor},${barColor}dd)`,
+        borderRadius:99,transition:"width 0.6s cubic-bezier(.16,1,.3,1)",
+        boxShadow:pct>0?`0 0 ${h*2}px ${barColor}40`:"none"}}/>
     </div>
   );
 }
@@ -65,12 +76,15 @@ function Bar({spent, budget, color, h=5}) {
 function MiniBar({data, color}) {
   const max = Math.max(...data.map(d=>d.val),1);
   return (
-    <div style={{display:"flex",alignItems:"flex-end",gap:5,height:60,marginTop:10}}>
+    <div style={{display:"flex",alignItems:"flex-end",gap:6,height:65,marginTop:12}}>
       {data.map((d,i)=>(
-        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3}}>
-          <div style={{width:"100%",borderRadius:"4px 4px 0 0",background:d.active?color:color+"44",
-            height:Math.max((d.val/max)*50,d.val>0?3:0),transition:"height 0.4s ease"}}/>
-          <div style={{fontSize:9,color:"rgba(255,255,255,0.3)",fontWeight:700}}>{d.label}</div>
+        <div key={i} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}>
+          <div style={{width:"100%",borderRadius:"6px 6px 2px 2px",
+            background:d.active?`linear-gradient(180deg,${color},${color}88)`:color+"30",
+            height:Math.max((d.val/max)*52,d.val>0?4:0),transition:"height 0.5s cubic-bezier(.16,1,.3,1)",
+            boxShadow:d.active?`0 0 12px ${color}30`:"none"}}/>
+          <div style={{fontSize:9,color:d.active?"rgba(255,255,255,0.6)":"rgba(255,255,255,0.2)",fontWeight:700,
+            transition:"color 0.3s"}}>{d.label}</div>
         </div>
       ))}
     </div>
@@ -79,20 +93,20 @@ function MiniBar({data, color}) {
 
 function AccCard({title, available, current, dot, delay=0, onClick}) {
   return (
-    <div onClick={onClick} style={{background:"rgba(255,255,255,0.05)",borderRadius:18,padding:"16px 18px",marginBottom:12,
-      border:"1px solid rgba(255,255,255,0.08)",backdropFilter:"blur(20px)",
-      cursor:"pointer",animation:`slideUp 0.38s ease ${delay}s both`,transition:"transform 0.12s"}}
-      onTouchStart={e=>e.currentTarget.style.transform="scale(0.985)"}
-      onTouchEnd={e=>e.currentTarget.style.transform="scale(1)"}>
-      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
-        <div style={{width:10,height:10,borderRadius:"50%",background:dot}}/>
-        <div style={{fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.7)"}}>{title}</div>
+    <div onClick={onClick} style={{background:"rgba(255,255,255,0.04)",borderRadius:20,padding:"18px 20px",marginBottom:12,
+      border:"1px solid rgba(255,255,255,0.06)",backdropFilter:"blur(40px)",
+      boxShadow:`0 0 25px ${dot}10, inset 0 1px 0 rgba(255,255,255,0.05)`,
+      cursor:"pointer",animation:`slideUp 0.45s cubic-bezier(.16,1,.3,1) ${delay}s both`,transition:"transform 0.15s cubic-bezier(.16,1,.3,1), box-shadow 0.3s"}}
+      onTouchStart={e=>{e.currentTarget.style.transform="scale(0.975)";e.currentTarget.style.boxShadow=`0 0 35px ${dot}20, inset 0 1px 0 rgba(255,255,255,0.08)`;}}
+      onTouchEnd={e=>{e.currentTarget.style.transform="scale(1)";e.currentTarget.style.boxShadow=`0 0 25px ${dot}10, inset 0 1px 0 rgba(255,255,255,0.05)`;}}>
+      <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:8}}>
+        <div style={{width:8,height:8,borderRadius:"50%",background:dot,boxShadow:`0 0 8px ${dot}60`}}/>
+        <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.5)",letterSpacing:0.5,textTransform:"uppercase"}}>{title}</div>
       </div>
       <div style={{display:"flex",alignItems:"baseline",gap:8}}>
-        <span style={{fontSize:30,fontWeight:800,color:"#fff",letterSpacing:-0.5}}>${fmt(available)}</span>
-        <span style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>Available Now</span>
+        <span className="hero-num" style={{fontSize:32,fontWeight:900,letterSpacing:-1}}>${fmt(available)}</span>
       </div>
-      <div style={{fontSize:13,color:"rgba(255,255,255,0.35)",marginTop:2}}>Current Balance ${fmt(current)}</div>
+      <div style={{fontSize:12,color:"rgba(255,255,255,0.25)",marginTop:4,fontWeight:600}}>Current Balance ${fmt(current)}</div>
     </div>
   );
 }
@@ -247,46 +261,52 @@ export default function App() {
   }
 
   const css=`
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
-    @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    @keyframes slideUp{from{opacity:0;transform:translateY(18px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(12px,-18px) scale(1.05)}66%{transform:translate(-8px,12px) scale(0.95)}}
+    @keyframes pulseGlow{0%,100%{opacity:0.6}50%{opacity:1}}
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     ::-webkit-scrollbar{display:none}
     input,select{-webkit-appearance:none}
-    input:focus,select:focus{outline:none;border-color:#C0392B!important;box-shadow:0 0 0 3px rgba(192,57,43,0.2)!important}
-    input::placeholder,select::placeholder{color:rgba(255,255,255,0.25)}
-    select option{background:#141418;color:#fff}
+    input:focus,select:focus{outline:none;border-color:rgba(192,57,43,0.5)!important;box-shadow:0 0 0 3px rgba(192,57,43,0.15), 0 0 20px rgba(192,57,43,0.1)!important}
+    input::placeholder,select::placeholder{color:rgba(255,255,255,0.2)}
+    select option{background:#0e0e14;color:#fff}
+    .hero-num{background:linear-gradient(135deg,#ffffff 0%,rgba(255,255,255,0.75) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .glow-text{text-shadow:0 0 20px currentColor}
+    .brand-gradient{background:linear-gradient(135deg,#E84D3D 0%,#C0392B 50%,#A93226 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
   `;
 
   const S={
-    root:    {position:"fixed",inset:0,fontFamily:"'Nunito','SF Pro Display','Helvetica Neue',sans-serif",overflow:"hidden",color:"#fff"},
-    screen:  {position:"absolute",inset:0,overflowY:"auto",paddingBottom:88,zIndex:1},
-    hdr:     {padding:"56px 20px 14px"},
-    subhead: {fontSize:13,color:"rgba(255,255,255,0.7)",fontWeight:700},
-    iconBtn: {width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.1)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",backdropFilter:"blur(10px)"},
+    root:    {position:"fixed",inset:0,fontFamily:"'Inter','SF Pro Display','Helvetica Neue',sans-serif",overflow:"hidden",color:"#fff",WebkitFontSmoothing:"antialiased"},
+    screen:  {position:"absolute",inset:0,overflowY:"auto",paddingBottom:90,zIndex:1},
+    hdr:     {padding:"58px 20px 16px"},
+    subhead: {fontSize:13,color:"rgba(255,255,255,0.5)",fontWeight:600,letterSpacing:0.3},
+    iconBtn: {width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",backdropFilter:"blur(20px)",transition:"background 0.2s"},
     body:    {padding:"0 14px"},
-    sl:      {fontSize:11,fontWeight:800,color:"rgba(255,255,255,0.35)",textTransform:"uppercase",letterSpacing:1.8,marginBottom:14},
+    sl:      {fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.25)",textTransform:"uppercase",letterSpacing:2,marginBottom:14},
     row:     {display:"flex",alignItems:"center",gap:10},
     sb:      {display:"flex",alignItems:"center",justifyContent:"space-between"},
-    divider: {height:1,background:"rgba(255,255,255,0.08)",margin:"12px 0"},
-    input:   {background:"rgba(255,255,255,0.06)",border:"1.5px solid rgba(255,255,255,0.1)",borderRadius:12,color:"#fff",fontSize:15,padding:"13px 14px",width:"100%",fontFamily:"inherit",fontWeight:600},
-    select:  {background:"rgba(255,255,255,0.06)",border:"1.5px solid rgba(255,255,255,0.1)",borderRadius:12,color:"#fff",fontSize:15,padding:"13px 14px",width:"100%",fontFamily:"inherit",fontWeight:600,cursor:"pointer"},
-    flabel:  {fontSize:11,fontWeight:800,color:"rgba(255,255,255,0.4)",textTransform:"uppercase",letterSpacing:1,marginBottom:7,display:"block"},
-    redBtn:  {background:"#C0392B",color:"#fff",border:"none",borderRadius:13,padding:14,fontWeight:800,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit"},
-    greenBtn:{background:"#27AE60",color:"#fff",border:"none",borderRadius:13,padding:14,fontWeight:800,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit"},
-    ghostBtn:{background:"rgba(255,255,255,0.08)",color:"rgba(255,255,255,0.6)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:13,padding:14,fontWeight:700,fontSize:14,cursor:"pointer",width:"100%",fontFamily:"inherit"},
-    bnav:    {position:"fixed",bottom:0,left:0,right:0,background:"rgba(10,10,15,0.92)",borderTop:"1px solid rgba(255,255,255,0.08)",display:"flex",justifyContent:"space-around",paddingBottom:"env(safe-area-inset-bottom,14px)",paddingTop:10,zIndex:50,backdropFilter:"blur(20px)"},
-    nb:      (a)=>({background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:3,color:a?"#C0392B":"rgba(255,255,255,0.35)",fontSize:10,fontWeight:a?800:600,cursor:"pointer",padding:"0 8px",fontFamily:"inherit"}),
-    overlay: {position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",zIndex:100,display:"flex",alignItems:"flex-end",animation:"fadeIn 0.18s ease"},
-    sheet:   {background:"#141418",borderRadius:"22px 22px 0 0",width:"100%",animation:"sheetUp 0.28s cubic-bezier(.4,0,.2,1)",maxHeight:"92vh",overflowY:"auto",paddingBottom:"env(safe-area-inset-bottom,20px)",border:"1px solid rgba(255,255,255,0.08)",borderBottom:"none"},
-    handle:  {width:38,height:4,background:"rgba(255,255,255,0.2)",borderRadius:99,margin:"14px auto 18px"},
-    stitle:  {fontSize:19,fontWeight:800,color:"#fff",padding:"0 20px 16px"},
+    divider: {height:1,background:"rgba(255,255,255,0.06)",margin:"14px 0"},
+    input:   {background:"rgba(255,255,255,0.04)",border:"1.5px solid rgba(255,255,255,0.08)",borderRadius:14,color:"#fff",fontSize:15,padding:"14px 16px",width:"100%",fontFamily:"inherit",fontWeight:500,transition:"all 0.2s"},
+    select:  {background:"rgba(255,255,255,0.04)",border:"1.5px solid rgba(255,255,255,0.08)",borderRadius:14,color:"#fff",fontSize:15,padding:"14px 16px",width:"100%",fontFamily:"inherit",fontWeight:500,cursor:"pointer",transition:"all 0.2s"},
+    flabel:  {fontSize:10,fontWeight:700,color:"rgba(255,255,255,0.3)",textTransform:"uppercase",letterSpacing:1.2,marginBottom:8,display:"block"},
+    redBtn:  {background:"linear-gradient(135deg,#E84D3D 0%,#C0392B 100%)",color:"#fff",border:"none",borderRadius:14,padding:15,fontWeight:700,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit",boxShadow:"0 4px 20px rgba(192,57,43,0.3)",transition:"transform 0.15s, box-shadow 0.15s"},
+    greenBtn:{background:"linear-gradient(135deg,#2ECC71 0%,#27AE60 100%)",color:"#fff",border:"none",borderRadius:14,padding:15,fontWeight:700,fontSize:15,cursor:"pointer",width:"100%",fontFamily:"inherit",boxShadow:"0 4px 20px rgba(39,174,96,0.3)",transition:"transform 0.15s, box-shadow 0.15s"},
+    ghostBtn:{background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.5)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:14,padding:15,fontWeight:600,fontSize:14,cursor:"pointer",width:"100%",fontFamily:"inherit",transition:"all 0.2s"},
+    bnav:    {position:"fixed",bottom:0,left:0,right:0,background:"rgba(6,6,11,0.88)",borderTop:"1px solid rgba(255,255,255,0.06)",display:"flex",justifyContent:"space-around",paddingBottom:"env(safe-area-inset-bottom,14px)",paddingTop:10,zIndex:50,backdropFilter:"blur(30px) saturate(1.5)"},
+    nb:      (a)=>({background:"none",border:"none",display:"flex",flexDirection:"column",alignItems:"center",gap:4,color:a?"#E84D3D":"rgba(255,255,255,0.28)",fontSize:10,fontWeight:a?700:500,cursor:"pointer",padding:"0 8px",fontFamily:"inherit",transition:"color 0.2s",position:"relative"}),
+    overlay: {position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",zIndex:100,display:"flex",alignItems:"flex-end",animation:"fadeIn 0.2s ease",backdropFilter:"blur(4px)"},
+    sheet:   {background:"#0e0e14",borderRadius:"24px 24px 0 0",width:"100%",animation:"sheetUp 0.32s cubic-bezier(.16,1,.3,1)",maxHeight:"92vh",overflowY:"auto",paddingBottom:"env(safe-area-inset-bottom,20px)",border:"1px solid rgba(255,255,255,0.06)",borderBottom:"none",boxShadow:"0 -10px 40px rgba(0,0,0,0.3)"},
+    handle:  {width:36,height:4,background:"rgba(255,255,255,0.15)",borderRadius:99,margin:"14px auto 20px"},
+    stitle:  {fontSize:20,fontWeight:800,color:"#fff",padding:"0 20px 18px",letterSpacing:-0.3},
     sbody:   {padding:"0 20px"},
-    fg:      {marginBottom:16},
-    flash:   {position:"fixed",top:58,left:"50%",transform:"translateX(-50%)",background:"rgba(255,255,255,0.12)",color:"#fff",padding:"10px 22px",borderRadius:99,fontWeight:700,fontSize:13,zIndex:999,whiteSpace:"nowrap",backdropFilter:"blur(20px)",border:"1px solid rgba(255,255,255,0.1)",animation:"fadeIn 0.2s ease"},
-    fab:     {position:"fixed",bottom:84,right:18,width:54,height:54,borderRadius:"50%",background:"#C0392B",border:"none",color:"#fff",fontSize:26,cursor:"pointer",boxShadow:"0 4px 20px rgba(192,57,43,0.45)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:49},
-    tip:     {background:"rgba(192,57,43,0.08)",border:"1px solid rgba(192,57,43,0.2)",borderRadius:14,padding:"13px 15px",marginBottom:12},
+    fg:      {marginBottom:18},
+    flash:   {position:"fixed",top:58,left:"50%",transform:"translateX(-50%)",background:"rgba(255,255,255,0.08)",color:"#fff",padding:"10px 24px",borderRadius:99,fontWeight:600,fontSize:13,zIndex:999,whiteSpace:"nowrap",backdropFilter:"blur(30px)",border:"1px solid rgba(255,255,255,0.08)",animation:"fadeIn 0.2s ease",boxShadow:"0 8px 32px rgba(0,0,0,0.3)"},
+    fab:     {position:"fixed",bottom:86,right:18,width:56,height:56,borderRadius:"50%",background:"linear-gradient(135deg,#E84D3D 0%,#C0392B 100%)",border:"none",color:"#fff",fontSize:26,cursor:"pointer",boxShadow:"0 4px 24px rgba(192,57,43,0.4), 0 0 40px rgba(192,57,43,0.15)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:49,transition:"transform 0.15s cubic-bezier(.16,1,.3,1), box-shadow 0.15s"},
+    tip:     {background:"rgba(192,57,43,0.06)",border:"1px solid rgba(192,57,43,0.12)",borderRadius:16,padding:"14px 16px",marginBottom:12},
   };
 
   const navItems=[
@@ -311,10 +331,13 @@ export default function App() {
         <div style={S.screen}>
           <div style={S.hdr}>
             <div style={S.sb}>
-              <div style={S.subhead}>Here's a snapshot of your accounts</div>
+              <div>
+                <div className="brand-gradient" style={{fontSize:22,fontWeight:900,letterSpacing:-0.5,marginBottom:4}}>en$ure</div>
+                <div style={S.subhead}>Your accounts</div>
+              </div>
               <div style={S.row}>
-                <button style={S.iconBtn}><span style={{fontSize:17}}>🔔</span></button>
-                <button style={S.iconBtn}><span style={{fontSize:17}}>👤</span></button>
+                <button style={S.iconBtn}><span style={{fontSize:16}}>🔔</span></button>
+                <button style={S.iconBtn}><span style={{fontSize:16}}>👤</span></button>
               </div>
             </div>
           </div>
@@ -333,7 +356,7 @@ export default function App() {
           <div style={S.body}>
             <Card delay={0}>
               <div style={S.sl}>Monthly Overview</div>
-              <div style={{fontSize:34,fontWeight:900,color:"#fff",letterSpacing:-1}}>${fmt(effIncome)}</div>
+              <div className="hero-num" style={{fontSize:36,fontWeight:900,letterSpacing:-1.5}}>${fmt(effIncome)}</div>
               <div style={{fontSize:13,color:"rgba(255,255,255,0.45)",marginTop:3}}>
                 ${fmt(totalSpent)} spent ·{" "}
                 <span style={{color:remaining>=0?"#27AE60":"#C0392B",fontWeight:700}}>
@@ -362,7 +385,7 @@ export default function App() {
                     </div>
                     <div style={{textAlign:"right"}}>
                       <div style={{fontSize:19,fontWeight:900,color:over?"#C0392B":cat.color}}>${fmt(spent)}</div>
-                      <div style={{fontSize:11,color:over?"#C0392B":"#bbb",fontWeight:600}}>{over?"$"+fmt(spent-bgt)+" over":"$"+fmt(bgt-spent)+" left"}</div>
+                      <div style={{fontSize:11,color:over?"#C0392B":"rgba(255,255,255,0.3)",fontWeight:600}}>{over?"$"+fmt(spent-bgt)+" over":"$"+fmt(bgt-spent)+" left"}</div>
                     </div>
                   </div>
                   <Bar spent={spent} budget={bgt} color={cat.dot}/>
@@ -388,7 +411,7 @@ export default function App() {
               <div style={S.sb}>
                 <div>
                   <div style={S.sl}>{period==="week"?weekLabel:monthLabel}</div>
-                  <div style={{fontSize:32,fontWeight:900,color:"#fff",letterSpacing:-1}}>${fmt(periodTotal)}</div>
+                  <div className="hero-num" style={{fontSize:34,fontWeight:900,letterSpacing:-1.5}}>${fmt(periodTotal)}</div>
                   <div style={{fontSize:13,color:"rgba(255,255,255,0.45)",marginTop:3}}>of ${fmt(periodBudget)} {period==="week"?"weekly":"monthly"} budget</div>
                 </div>
                 <div style={{textAlign:"right"}}>
@@ -628,8 +651,8 @@ export default function App() {
                         {rothSteps[step.id] && <span style={{color:"#fff",fontSize:13,fontWeight:900}}>✓</span>}
                       </div>
                       <div>
-                        <div style={{fontSize:13,fontWeight:700,color:rothSteps[step.id]?"#bbb":"#1a1a1a",
-                          textDecoration:rothSteps[step.id]?"line-through":"none"}}>{step.label}</div>
+                        <div style={{fontSize:13,fontWeight:700,color:rothSteps[step.id]?"rgba(255,255,255,0.25)":"rgba(255,255,255,0.85)",
+                          textDecoration:rothSteps[step.id]?"line-through":"none",transition:"color 0.2s"}}>{step.label}</div>
                         <div style={{fontSize:10,color:"rgba(255,255,255,0.25)",fontWeight:600}}>{step.sub}</div>
                       </div>
                     </div>
@@ -647,7 +670,7 @@ export default function App() {
                   </div>
                   <div>
                     <div style={{fontSize:15,fontWeight:800,color:"#fff"}}>Move $15k to a HYSA</div>
-                    <div style={{fontSize:11,color:hysaDone?"#27AE60":"#bbb",fontWeight:600}}>
+                    <div style={{fontSize:11,color:hysaDone?"#27AE60":"rgba(255,255,255,0.3)",fontWeight:600}}>
                       {hysaDone?"Done — earning $675/yr 🎉":"Earning $510/yr less than you could be"}
                     </div>
                   </div>
@@ -763,12 +786,17 @@ export default function App() {
 
       {/* Bottom nav */}
       <nav style={S.bnav}>
-        {navItems.map(n=>(
-          <button key={n.id} style={S.nb(tab===n.id)} onClick={()=>setTab(n.id)}>
-            <span style={{fontSize:21}}>{n.icon}</span>
-            <span>{n.label}</span>
-          </button>
-        ))}
+        {navItems.map(n=>{
+          const active=tab===n.id;
+          return (
+            <button key={n.id} style={S.nb(active)} onClick={()=>setTab(n.id)}>
+              <span style={{fontSize:20,transition:"transform 0.2s",transform:active?"scale(1.1)":"scale(1)"}}>{n.icon}</span>
+              <span>{n.label}</span>
+              {active && <div style={{position:"absolute",top:-1,width:20,height:2,borderRadius:99,
+                background:"#E84D3D",boxShadow:"0 0 8px rgba(232,77,61,0.5)"}}/>}
+            </button>
+          );
+        })}
       </nav>
 
       {/* ── FAB MENU ── */}
@@ -971,7 +999,7 @@ export default function App() {
             <div style={S.sbody}>
               <div style={{background:"rgba(255,255,255,0.05)",borderRadius:16,padding:22,textAlign:"center",marginBottom:20}}>
                 <div style={{fontSize:13,color:"rgba(255,255,255,0.35)",fontWeight:700,marginBottom:6}}>Available Balance</div>
-                <div style={{fontSize:42,fontWeight:900,color:"#fff",letterSpacing:-1}}>${fmt(balance)}</div>
+                <div className="hero-num" style={{fontSize:42,fontWeight:900,letterSpacing:-1.5}}>${fmt(balance)}</div>
               </div>
               <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"rgba(255,255,255,0.45)",fontWeight:600}}>Income This Month</span><span style={{fontSize:15,fontWeight:800,color:"#27AE60"}}>${fmt(monthIncome)}</span></div>
               <div style={{...S.sb,marginBottom:13}}><span style={{fontSize:13,color:"rgba(255,255,255,0.45)",fontWeight:600}}>Spent This Month</span><span style={{fontSize:15,fontWeight:800,color:"#C0392B"}}>${fmt(totalSpent)}</span></div>

@@ -1,4 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="108" fill="#C0392B"/>
-  <text x="256" y="340" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="280" fill="white">$</text>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0e0e18"/>
+      <stop offset="100%" style="stop-color:#06060B"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E84D3D"/>
+      <stop offset="100%" style="stop-color:#C0392B"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="100%" style="stop-color:#cccccc"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- Subtle glow -->
+  <circle cx="180" cy="180" r="200" fill="#E84D3D" opacity="0.04"/>
+  <circle cx="380" cy="380" r="180" fill="#2980B9" opacity="0.03"/>
+  <!-- Border -->
+  <rect x="1" y="1" width="510" height="510" rx="111" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <!-- Inner highlight -->
+  <rect x="4" y="4" width="504" height="252" rx="108" fill="url(#textGrad)" opacity="0.02"/>
+  <!-- e$ text -->
+  <text x="256" y="330" text-anchor="middle" font-family="Inter,SF Pro Display,Helvetica Neue,Arial,sans-serif" font-weight="900" font-size="240" fill="url(#textGrad)" letter-spacing="-12">e$</text>
+  <!-- Accent underline -->
+  <rect x="126" y="360" width="260" height="5" rx="3" fill="url(#accent)" opacity="0.8"/>
 </svg>

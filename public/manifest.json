@@ -1,11 +1,11 @@
 {
-  "name": "Budget Planner",
-  "short_name": "Budget",
-  "description": "Personal budget planner & savings tracker",
+  "name": "en$ure",
+  "short_name": "en$ure",
+  "description": "Take control of your money",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#C0392B",
+  "background_color": "#06060B",
+  "theme_color": "#06060B",
   "orientation": "portrait",
   "icons": [
     {
