@@ -269,9 +269,12 @@ export default function App() {
     @keyframes pulseGlow{0%,100%{opacity:0.6}50%{opacity:1}}
     @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-    html{background:#06060B;height:100%;overflow:hidden}
-    body{background:#06060B;height:100%;overflow:hidden;margin:0;padding:0;min-height:100vh;min-height:-webkit-fill-available}
-    #root{background:#06060B;height:100%;min-height:100vh;min-height:-webkit-fill-available}
+    html{background:#06060B;height:100%;overflow:hidden;overscroll-behavior:none}
+    body{background:#06060B;height:100%;overflow:hidden;margin:0;padding:0;min-height:100vh;min-height:100dvh;min-height:-webkit-fill-available;overscroll-behavior:none}
+    #root{background:#06060B;height:100%;min-height:100vh;min-height:100dvh;min-height:-webkit-fill-available}
+    @supports(padding:max(0px)){
+      body::after{content:'';position:fixed;bottom:0;left:0;right:0;height:env(safe-area-inset-bottom,50px);background:#06060B;z-index:9999;pointer-events:none}
+    }
     ::-webkit-scrollbar{display:none}
     input,select{-webkit-appearance:none}
     input:focus,select:focus{outline:none;border-color:rgba(192,57,43,0.5)!important;box-shadow:0 0 0 3px rgba(192,57,43,0.15), 0 0 20px rgba(192,57,43,0.1)!important}
@@ -788,7 +791,7 @@ export default function App() {
       <button style={S.fab} onClick={()=>setSheet("fabMenu")}>＋</button>
 
       {/* Bottom safe area fill */}
-      <div style={{position:"fixed",bottom:0,left:0,right:0,height:50,background:"#06060B",zIndex:49}}/>
+      <div style={{position:"fixed",bottom:-200,left:0,right:0,height:250,background:"#06060B",zIndex:49}}/>
       {/* Bottom nav */}
       <nav style={S.bnav}>
         {navItems.map(n=>{
