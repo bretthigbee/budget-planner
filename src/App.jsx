@@ -3,7 +3,7 @@ import { usePersistedState } from "./usePersistedState";
 import { requestNotificationPermission, getNotificationPermission, scheduleSundayReminder } from "./notifications";
 import { signInWithGoogle, logOut, onAuthChange, saveUserData, loadUserData, onUserDataChange } from "./firebase";
 
-const DEFAULT_INCOME = 1020;
+const DEFAULT_INCOME = 0;
 const SAVINGS_TOTAL  = 15000;
 const CAR_SPEND      = 7500;
 const POST_CAR       = SAVINGS_TOTAL - CAR_SPEND;
