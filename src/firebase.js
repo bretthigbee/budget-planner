@@ -2,14 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 
-// TODO: Replace with your Firebase config
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: "",
+  apiKey: "AIzaSyBodkDrY3tWGsNprZinc87VubwVRFl4o6Q",
+  authDomain: "budget-planner-9911c.firebaseapp.com",
+  projectId: "budget-planner-9911c",
+  storageBucket: "budget-planner-9911c.firebasestorage.app",
+  messagingSenderId: "898249309651",
+  appId: "1:898249309651:web:b3d650b5a2a1a0693c0326",
 };
 
 const app = initializeApp(firebaseConfig);

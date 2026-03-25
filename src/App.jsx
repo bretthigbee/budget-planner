@@ -1,6 +1,7 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { usePersistedState } from "./usePersistedState";
 import { requestNotificationPermission, getNotificationPermission, scheduleSundayReminder } from "./notifications";
+import { signInWithGoogle, logOut, onAuthChange, saveUserData, loadUserData, onUserDataChange } from "./firebase";
 
 const DEFAULT_INCOME = 1020;
 const SAVINGS_TOTAL  = 15000;
@@ -146,6 +147,60 @@ export default function App() {
   const [rothSteps,    setRothSteps]   = usePersistedState("bp_rothSteps", {open:false,fund:false,buy:false,auto:false});
   const [lastPaycheck, setLastPaycheck]= useState(0);
   const [notifEnabled, setNotifEnabled]= usePersistedState("bp_notifEnabled", false);
+  const [user, setUser]               = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const syncPause = useRef(false);
+  const saveTimer = useRef(null);
+
+  // Auth listener
+  useEffect(() => {
+    return onAuthChange((u) => { setUser(u); setAuthLoading(false); });
+  }, []);
+
+  // Load data from Firestore on login
+  useEffect(() => {
+    if (!user) return;
+    let unsub;
+    (async () => {
+      const data = await loadUserData(user.uid);
+      if (data) {
+        syncPause.current = true;
+        if (data.txList) setTxList(data.txList);
+        if (data.incList) setIncList(data.incList);
+        if (data.actuals) setActuals(data.actuals);
+        if (data.gProgress) setGP(data.gProgress);
+        if (data.balance !== undefined) setBalance(data.balance);
+        if (data.hysaDone !== undefined) setHysaDone(data.hysaDone);
+        if (data.rothSteps) setRothSteps(data.rothSteps);
+        setTimeout(() => { syncPause.current = false; }, 500);
+      }
+      // Real-time listener for cross-device sync
+      unsub = onUserDataChange(user.uid, (data) => {
+        if (syncPause.current) return;
+        syncPause.current = true;
+        if (data.txList) setTxList(data.txList);
+        if (data.incList) setIncList(data.incList);
+        if (data.actuals) setActuals(data.actuals);
+        if (data.gProgress) setGP(data.gProgress);
+        if (data.balance !== undefined) setBalance(data.balance);
+        if (data.hysaDone !== undefined) setHysaDone(data.hysaDone);
+        if (data.rothSteps) setRothSteps(data.rothSteps);
+        setTimeout(() => { syncPause.current = false; }, 500);
+      });
+    })();
+    return () => unsub && unsub();
+  }, [user]);
+
+  // Debounced save to Firestore on data change
+  const syncData = useCallback(() => {
+    if (!user || syncPause.current) return;
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      saveUserData(user.uid, { txList, incList, actuals, gProgress, balance, hysaDone, rothSteps });
+    }, 800);
+  }, [user, txList, incList, actuals, gProgress, balance, hysaDone, rothSteps]);
+
+  useEffect(() => { syncData(); }, [syncData]);
 
   // Schedule Sunday reminder if notifications are enabled
   useEffect(() => {
@@ -338,7 +393,15 @@ export default function App() {
               </div>
               <div style={S.row}>
                 <button style={S.iconBtn}><span style={{fontSize:16}}>🔔</span></button>
-                <button style={S.iconBtn}><span style={{fontSize:16}}>👤</span></button>
+                {user ? (
+                  <button style={{...S.iconBtn,overflow:"hidden",padding:0}} onClick={()=>setSheet("profile")}>
+                    {user.photoURL ? <img src={user.photoURL} alt="" style={{width:"100%",height:"100%",borderRadius:"50%"}}/> : <span style={{fontSize:16}}>👤</span>}
+                  </button>
+                ) : (
+                  <button style={S.iconBtn} onClick={async()=>{try{await signInWithGoogle();flash2("Signed in ✓");}catch(e){if(e.code!=="auth/popup-closed-by-user")flash2("Sign in failed");}}}>
+                    <span style={{fontSize:16}}>👤</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -1022,6 +1085,32 @@ export default function App() {
                 </div>
               )}
               <button style={{...S.ghostBtn,marginTop:22}} onClick={()=>setSheet(null)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── PROFILE SHEET ── */}
+      {sheet==="profile" && user && (
+        <div style={S.overlay} onClick={()=>setSheet(null)}>
+          <div style={S.sheet} onClick={e=>e.stopPropagation()}>
+            <div style={S.handle}/>
+            <div style={S.stitle}>Account</div>
+            <div style={S.sbody}>
+              <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:24}}>
+                {user.photoURL && <img src={user.photoURL} alt="" style={{width:48,height:48,borderRadius:"50%"}}/>}
+                <div>
+                  <div style={{fontSize:16,fontWeight:800,color:"#fff"}}>{user.displayName}</div>
+                  <div style={{fontSize:12,color:"rgba(255,255,255,0.4)",fontWeight:500}}>{user.email}</div>
+                </div>
+              </div>
+              <div style={{background:"rgba(39,174,96,0.08)",border:"1px solid rgba(39,174,96,0.2)",borderRadius:14,padding:"12px 16px",marginBottom:20}}>
+                <div style={{fontSize:12,color:"#27AE60",fontWeight:700}}>Data syncing across all your devices</div>
+              </div>
+              <button style={{...S.ghostBtn,marginBottom:10}} onClick={async()=>{await logOut();setSheet(null);flash2("Signed out");}}>
+                Sign Out
+              </button>
+              <button style={S.ghostBtn} onClick={()=>setSheet(null)}>Close</button>
             </div>
           </div>
         </div>
