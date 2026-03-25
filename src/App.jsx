@@ -269,7 +269,7 @@ export default function App() {
     @keyframes pulseGlow{0%,100%{opacity:0.6}50%{opacity:1}}
     @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-    html,body{background:#06060B;margin:0;padding:0}
+    html,body{background:#06060B;margin:0;padding:0;overflow:hidden;position:fixed;width:100%;height:100%;overscroll-behavior:none}
     ::-webkit-scrollbar{display:none}
     input,select{-webkit-appearance:none}
     input:focus,select:focus{outline:none;border-color:rgba(192,57,43,0.5)!important;box-shadow:0 0 0 3px rgba(192,57,43,0.15), 0 0 20px rgba(192,57,43,0.1)!important}
@@ -282,7 +282,7 @@ export default function App() {
 
   const S={
     root:    {position:"fixed",inset:0,fontFamily:"'Inter','SF Pro Display','Helvetica Neue',sans-serif",overflow:"hidden",color:"#fff",WebkitFontSmoothing:"antialiased"},
-    screen:  {position:"absolute",inset:0,overflowY:"auto",paddingBottom:"calc(env(safe-area-inset-bottom, 14px) + 80px)",zIndex:1},
+    screen:  {position:"absolute",inset:0,overflowY:"auto",WebkitOverflowScrolling:"touch",overscrollBehavior:"none",paddingBottom:100,zIndex:1},
     hdr:     {padding:"58px 20px 16px"},
     subhead: {fontSize:13,color:"rgba(255,255,255,0.5)",fontWeight:600,letterSpacing:0.3},
     iconBtn: {width:38,height:38,borderRadius:"50%",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",backdropFilter:"blur(20px)",transition:"background 0.2s"},
